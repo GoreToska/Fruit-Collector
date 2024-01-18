@@ -25,11 +25,15 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         PlayerInputReader.SwipeAction += GetNewRotation;
+        GameManager.OnLoseGame += StopMovement;
+        GameManager.OnWinGame += StopMovement;
     }
 
     private void OnDisable()
     {
         PlayerInputReader.SwipeAction -= GetNewRotation;
+        GameManager.OnLoseGame -= StopMovement;
+        GameManager.OnWinGame -= StopMovement;
     }
 
     private void LateUpdate()

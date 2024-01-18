@@ -13,15 +13,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int _timeToPlay;
 
     public static UnityAction<int> OnTimerChanged;
+    public static UnityAction OnLoseGame;
+    public static UnityAction OnWinGame;
 
     private int _fruitCount;
     private float _time;
+    private bool _isPlaying = true;
 
     private void Awake()
     {
         _fruitCount = _fruitsOnScene.Count;
         _time = _timeToPlay;
         OnTimerChanged?.Invoke((int)_time);
+        _uiManager.SetMaxFruitCount(_fruitCount);
     }
 
     private void OnEnable()
@@ -38,6 +42,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (!_isPlaying)
+            return;
+
         if (_time <= 0)
         {
             Lose();
@@ -58,13 +65,13 @@ public class GameManager : MonoBehaviour
 
     private void Win()
     {
-        _uiManager.ShowWinCanvas();
-        _playerController.StopMovement();
+        OnWinGame?.Invoke();
+        _isPlaying = false;
     }
 
     private void Lose()
     {
-        _uiManager.ShowLoseCanvas();
-        _playerController.StopMovement();
+        OnLoseGame?.Invoke();
+        _isPlaying = false;
     }
 }
