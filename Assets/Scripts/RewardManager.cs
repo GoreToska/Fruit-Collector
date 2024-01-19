@@ -1,20 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class RewardManager : MonoBehaviour
 {
     public static RewardManager Instance;
 
+    [SerializeField] private GoldData _goldData;
     [SerializeField] private int _columsCount = 3;
     [SerializeField] private int _rowsCount = 3;
     [SerializeField] private Transform _rewardsTransform;
     [SerializeField] private RewardCards _rewardCards;
+    [SerializeField] private int _reward = 150;
+    [SerializeField] private int _standardReward = 50;
+
+    public static UnityAction<int> OnGotRewarded;
 
     private List<GameObject> _rewards = new List<GameObject>();
     private Fruits _lastFruit;
     private bool _getsReward = true;
     private int _cardsCount = 0;
+    private int _totalReward = 0;
 
     private void Awake()
     {
@@ -37,6 +44,7 @@ public class RewardManager : MonoBehaviour
     private void SetRewards()
     {
         _cardsCount = 0;
+        _totalReward = 0;
         _getsReward = true;
 
         for (int i = 0; i < _rewardCards.Cards.Count; i++)
@@ -44,7 +52,6 @@ public class RewardManager : MonoBehaviour
             for (int j = 0; j < _columsCount * _rowsCount / _rewardCards.Cards.Count; j++)
             {
                 _rewards.Add(Instantiate(_rewardCards.Cards[i], _rewardsTransform));
-                Debug.Log(i);
             }
         }
 
@@ -73,9 +80,27 @@ public class RewardManager : MonoBehaviour
 
         if (_cardsCount == 3)
         {
-            Debug.Log("Do smth");
+            if (_getsReward)
+            {
+                _totalReward += GetBonusReward();
+            }
+
+            _totalReward += GetStandardReward();
+            OnGotRewarded.Invoke(_totalReward);
         }
 
         return true;
+    }
+
+    private int GetBonusReward()
+    {
+        _goldData.SetGold(_goldData.GetGold() + _reward);
+        return _reward;
+    }
+
+    private int GetStandardReward()
+    {
+        _goldData.SetGold(_goldData.GetGold() + _standardReward);
+        return _standardReward;
     }
 }
