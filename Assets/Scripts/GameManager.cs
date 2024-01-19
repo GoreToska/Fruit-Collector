@@ -32,12 +32,14 @@ public class GameManager : MonoBehaviour
     {
         PlayerInteractor.OnCorrectFruitPickUp += CheckFruitCount;
         PlayerInteractor.OnWrongFruitPickUp += Lose;
+        DeadZone.OnDeadZone += Lose;
     }
 
     private void OnDisable()
     {
         PlayerInteractor.OnCorrectFruitPickUp -= CheckFruitCount;
         PlayerInteractor.OnWrongFruitPickUp -= Lose;
+        DeadZone.OnDeadZone -= Lose;
     }
 
     private void Update()

@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class RewardManager : MonoBehaviour
 {
     public static RewardManager Instance;
 
+    [SerializeField] private SoundManager _soundManager;
     [SerializeField] private GoldData _goldData;
     [SerializeField] private int _columsCount = 3;
     [SerializeField] private int _rowsCount = 3;
@@ -62,9 +64,10 @@ public class RewardManager : MonoBehaviour
 
         _rewards.Shuffle();
 
-        for (int i = 0; i < _rewards.Count - 1; i++)
+        for (int i = 0; i < _rewards.Count; i++)
         {
             _rewards[i].transform.SetSiblingIndex(i);
+            _rewards[i].GetComponent<Button>().onClick.AddListener(_soundManager.PlayUIClickClip);
         }
     }
 
@@ -73,10 +76,11 @@ public class RewardManager : MonoBehaviour
         if (_cardsCount == 3)
             return false;
 
-        if (_lastFruit != fruit)
+        if (_lastFruit != fruit && _cardsCount != 0)
             _getsReward = false;
 
         _cardsCount++;
+        _lastFruit = fruit;
 
         if (_cardsCount == 3)
         {

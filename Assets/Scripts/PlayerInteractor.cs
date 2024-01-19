@@ -23,6 +23,9 @@ public class PlayerInteractor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag != "Pickup")
+            return;
+
         if (other.GetComponent<IPickUp>().Pickup(_currentFruit))
         {
             AddFruit();

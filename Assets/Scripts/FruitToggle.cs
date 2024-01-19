@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class FruitToggle : MonoBehaviour
 {
     [SerializeField] private Fruits _fruit;
+    [SerializeField] private SoundManager _soundManager;
 
     public static UnityAction<Fruits> OnFruitChanged;
 
@@ -24,6 +25,7 @@ public class FruitToggle : MonoBehaviour
         if(_toggle.isOn)
         {
             OnFruitChanged.Invoke(_fruit);
+            _soundManager.PlayUIClickClip();
         }
     }
 }

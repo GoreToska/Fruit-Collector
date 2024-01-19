@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
@@ -13,6 +14,9 @@ public class PlayerController : MonoBehaviour
     private bool _isRotating = false;
     private Rigidbody _rigidbody;
     private Quaternion _nextRotation;
+
+    public static UnityAction OnStartMoving;
+    public static UnityAction OnEndMoving;
 
     public bool IsMoving { get { return _isMoving; } }
     public bool IsRotating { get { return _isRotating; } }
@@ -48,15 +52,14 @@ public class PlayerController : MonoBehaviour
             RotatePlayer(_nextRotation);
         }
     }
+    private void Start()
+    {
+        StartMovement();
+    }
 
     private void MovePlayer()
     {
         _rigidbody.MovePosition(transform.position + transform.forward * Time.fixedDeltaTime * _speed);
-    }
-
-    private void Start()
-    {
-        StartMovement();
     }
 
     private void GetNewRotation(Vector2 input)
@@ -86,11 +89,13 @@ public class PlayerController : MonoBehaviour
     public void StartMovement()
     {
         _isMoving = true;
+        OnStartMoving?.Invoke();
     }
 
     public void StopMovement()
     {
         _isMoving = false;
+        OnEndMoving?.Invoke();
     }
 
     private void RotatePlayer(Quaternion newRotation)

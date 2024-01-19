@@ -17,7 +17,6 @@ public class Pickup : MonoBehaviour, IPickUp
         }
         else
         {
-            Debug.Log("Lost!");
             return false;
         }
     }

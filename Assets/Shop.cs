@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Shop : MonoBehaviour
 {
     [SerializeField] private GoldData _goldData;
-
+    [SerializeField] private SimpleLVLSaver _simpleLVLSaver;
     private int _lvlNumber;
     private int _lvl;
     private int _price;
@@ -33,5 +33,6 @@ public class Shop : MonoBehaviour
     {
         _currentLVLToBuy.Unlock();
         _goldData.SetGold(_goldData.GetGold() - _price);
+        _simpleLVLSaver.SaveLVL(_lvl);
     }
 }
